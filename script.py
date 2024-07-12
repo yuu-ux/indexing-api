@@ -1,10 +1,11 @@
 import sys
+import os
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # ダウンロードしたサービスアカウントキーのパス
-KEY_FILE = 'ambient-scope-423207-c1-c4fcf9545008.json'
+KEY_FILE = os.getenv('KEY_FILE')
 
 # 認証情報の設定
 credentials = service_account.Credentials.from_service_account_file(
@@ -17,6 +18,8 @@ service = build('indexing', 'v3', credentials=credentials)
 
 # コマンドライン引数からURLリストを取得
 urls = sys.argv[1:]
+# 配列で渡す
+# urls = ["URL", "URL"]
 
 if not urls:
     print("Usage: python script.py <url1> <url2> ...")
