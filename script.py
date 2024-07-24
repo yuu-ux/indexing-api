@@ -3,6 +3,10 @@ import os
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from colorama import init, Fore, Style
+from dotenv import load_dotenv
+load_dotenv()
+init(autoreset=True)
 
 # ダウンロードしたサービスアカウントキーのパス
 KEY_FILE = os.getenv('KEY_FILE')
@@ -17,9 +21,11 @@ credentials = service_account.Credentials.from_service_account_file(
 service = build('indexing', 'v3', credentials=credentials)
 
 # コマンドライン引数からURLリストを取得
-urls = sys.argv[1:]
+# urls = sys.argv[1:]
 # 配列で渡す
-# urls = ["URL", "URL"]
+urls = [
+
+]
 
 if not urls:
     print("Usage: python script.py <url1> <url2> ...")
@@ -33,16 +39,16 @@ for url in urls:
         'type': 'URL_UPDATED'
     }
     
-    
     try:
         # リクエストの送信
         response = service.urlNotifications().publish(body=body).execute()
-        print(f'Successfully indexed: {url}')
+        print(f'{Fore.GREEN}Successfully indexed: {url}')
         print(response)
     except HttpError as err:
-        print(f'Failed to index: {url}')
-        print(f'Error code: {err.resp.status}')
-        print(f'Error details: {err.content.decode("utf-8")}')
+        print(f'{Fore.RED}Failed to index: {url}')
+        print(f'{Fore.YELLOW}Error code: {err.resp.status}')
+        print(f'{Fore.YELLOW}Error details: {err.content.decode("utf-8")}')
     except Exception as e:
-        print(f'Failed to index: {url}')
-        print(f'Unexpected error: {e}')
+        print(f'{Fore.RED}Failed to index: {url}')
+        print(f'{Fore.YELLOW}Unexpected error: {e}')
+
